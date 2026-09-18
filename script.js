@@ -1,6 +1,7 @@
 const turno = document.getElementById("turno");
 const casillas = document.querySelectorAll(".casilla");
 const reiniciar = document.getElementById("reiniciar");
+const tablero = document.getElementById("tablero");
 
 let jugadorActual = "X";
 let partidaTerminada = false;
@@ -53,52 +54,50 @@ function comprobarEmpate() {
 }
 
 
-for (const casilla of casillas) {
+tablero.addEventListener("click", (event) => {
 
-    casilla.addEventListener("click", () => {
+    const casilla = event.target.closest(".casilla");
 
-        if (partidaTerminada === true) {
-            return;
-        }
+    if (!casilla) {
+        return;
+    }
 
-        if (casilla.textContent !== "") {
-            return;
-        }
+    if (partidaTerminada === true) {
+        return;
+    }
 
-        casilla.textContent = jugadorActual;
-
-
-        if (comprobarGanador()) {
-
-            turno.textContent = `Ha ganado ${jugadorActual}`;
-
-            partidaTerminada = true;
-
-            return;
-        }
+    if (casilla.textContent !== "") {
+        return;
+    }
 
 
-        if (comprobarEmpate()) {
+    casilla.textContent = jugadorActual;
+    casilla.classList.add(jugadorActual === "X" ? "jugador-x" : "jugador-o");
 
-            turno.textContent = "Empate";
+    if (comprobarGanador()) {
+        turno.textContent = `Ha ganado ${jugadorActual}`;
+        partidaTerminada = true;
+        return;
+    }
 
-            partidaTerminada = true;
+    if (comprobarEmpate()) {
+        turno.textContent = "Empate";
+        partidaTerminada = true;
+        return;
+    }
 
-            return;
-        }
-
-
-        jugadorActual = jugadorActual === "X" ? "O" : "X";
-
-        turno.textContent = `Turno: ${jugadorActual}`;
-    });
-}
+    jugadorActual = jugadorActual === "X" ? "O" : "X";
+    turno.textContent = `Turno: ${jugadorActual}`;
+});
 
 
 reiniciar.addEventListener("click", () => {
 
     for (const casilla of casillas) {
         casilla.textContent = "";
+
+        casilla.classList.remove("jugador-x");
+        casilla.classList.remove("jugador-o");
     }
 
     jugadorActual = "X";
@@ -107,8 +106,13 @@ reiniciar.addEventListener("click", () => {
     turno.textContent = "Turno: X";
 });
 
+document.addEventListener("keydown", (event) => {
 
+    if (event.key === "d") {
+        document.body.classList.toggle("modo-oscuro");
+    }
 
+});
 
 
 

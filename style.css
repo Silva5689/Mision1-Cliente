@@ -1,58 +1,152 @@
 body {
     font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #fdfdff;
+
+    min-height: 100vh;
     margin: 0;
-    padding-top: 40px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background: linear-gradient(135deg, #eef3f9, #f8fafc);
+    color: #1e293b;
 }
 
 h1 {
-    margin-bottom: 10px;
+    margin: 0 0 12px;
+
+    font-size: 36px;
 }
 
 #turno {
-    font-size: 20px;
-    margin-bottom: 20px;
+    margin: 0 0 28px;
+    padding: 8px 18px;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    background-color: #e2e8f0;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 20px;
 }
 
 #tablero {
     display: grid;
     grid-template-columns: repeat(3, 100px);
-    gap: 6px;
 
-    width: fit-content;
-    margin: 0 auto 20px;
+    gap: 8px;
+
+    margin-bottom: 22px;
 }
 
 .casilla {
     width: 100px;
     height: 100px;
 
-    font-size: 40px;
+    font-size: 42px;
     font-weight: bold;
 
+    color: #1e293b;
     background-color: white;
-    border: 2px solid #333;
-    border-radius: 8px;
+
+    border: 2px solid #94a3b8;
+    border-radius: 9px;
+
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
 
     cursor: pointer;
+
+    transition:
+        background-color 0.2s,
+        border-color 0.2s,
+        transform 0.15s,
+        box-shadow 0.2s;
 }
 
 .casilla:hover {
-    background-color: #e8e8e8;
+    background-color: #f1f5f9;
+    border-color: #2563eb;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+.casilla:active {
+    transform: scale(0.96);
 }
 
 #reiniciar {
-    padding: 10px 20px;
+    width: 316px;
+
+    padding: 12px 20px;
+
     font-size: 16px;
+    font-weight: bold;
+
+    color: white;
+    background-color: #2563eb;
 
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
+
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
 
     cursor: pointer;
+
+    transition:
+        background-color 0.2s,
+        transform 0.15s,
+        box-shadow 0.2s;
+}
+
+#reiniciar:hover {
+    background-color: #1d4ed8;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.3);
+}
+
+#reiniciar:active {
+    transform: scale(0.98);
 }
 
 noscript p {
     color: red;
     font-weight: bold;
+}
+
+.jugador-x {
+    color: #2563eb;
+}
+
+.jugador-o {
+    color: #dc2626;
+}
+
+body.modo-oscuro {
+    background: #111827;
+    color: #f8fafc;
+}
+
+body.modo-oscuro #turno {
+    background-color: #334155;
+    color: #f8fafc;
+}
+
+body.modo-oscuro .casilla {
+    background-color: #1e293b;
+    border-color: #64748b;
+}
+
+body.modo-oscuro .casilla:hover {
+    background-color: #334155;
+    border-color: #60a5fa;
+}
+
+body.modo-oscuro #reiniciar {
+    background-color: #3b82f6;
 }
