@@ -29,7 +29,7 @@ No obstante, decidí mantener un listener por casilla en esta primera versión, 
 ## Autopsia
 
 ### Decisión 1:
-Decidí añadir un addEventListener a cada una de las nueve casillas porque al tratarse de un tablero pequeño me parece una solución sencilla de entender. No obstante, más adelante se intentará añadir delegación de eventos.
+Añadí delegación de eventos para poder poner solo un evento en el tablero, y no uno por cada casilla. De esta manera me evito poner 9 eventos, uno por cada casilla del tablero y utilizo la propagación.
 
 ### Decisión 2:
 Por otro lado, decidí guardar las combinaciones ganadoras en un array y recorrerlo para ver si hay ganador. De otro modo, se tendría que hacer un if enorme de comparaciones.
