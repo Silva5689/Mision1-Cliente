@@ -14,13 +14,14 @@ Se trata de un tablero 3x3 en el que dos jugadores compiten por conseguir tres s
 ## Uso de IA
 Utilicé ChatGPT como herramienta de inteligencia artificial para ayudarme.
 Principalmente la utilicé para que me explicara cómo funcionan y cómo podía implementar cosas que todavía no habíamos llegado a ver en clase.
-Escribí manualmente la estructura HTML, los estilos CSS y la lógica del juego. No obstante, ChatGPT me proponía los cambios para implementar las cosas nuevas que todavía no habíamos visto en clase, por lo tanto, intentaba aplicarlos a mi código y comprobar que funcionaban con el navegador.
+Escribí manualmente la estructura HTML y la lógica del juego. No obstante, ChatGPT me proponía los cambios para implementar las cosas nuevas que todavía no habíamos visto en clase o que me costaban un poco más, por lo tanto, intentaba aplicarlos a mi código y comprobar que funcionaban con el navegador. Me ayudó mucho con el CSS, ya que entiendo como funciona, pero no soy muy creativo.
 
 ### Prompt 1: 
-"Antes utilizaba onclick directamente en el html, pero en los apuntes de la asignatura he visto que se utiliza addEventListener. Cómo puedo usar addEventListener en mi 3 en raya?"
+"El corrector me ha dicho que es mejor generar las 9 casillas del tablero desde JavaScript en vez de escribirlas una a una en el HTML. 
+Cómo se hace?"
 ### Resultado 1 : 
-Cambié los onclicks de HTML por listeners desde JavaScript. Seleccioné las casillas con querySelectorAll() y recorrí todas las casillas para registrar un evento click en cada una.
-Comprobé el resultado probando que todas las casillas se podían clickar y funcionaban como antes.
+ChatGPT me explicó que podía crear los botones con document.createElement() dentro de un bucle y añadirlos al tablero con appendChild().
+Antes de este cambio guardaba la referencia a las casillas al principio del código, pero después de este cambio, tuve que mover el querySelectorAll(".casilla") a después de la creación de las casillas, ya que debe ejecutarse una vez las casillas están creadas. Sino, tendría guardado un NodeList vacío.
 
 ### Prompt 2:
 "He visto en los apuntes que en vez de añadir un listener a cada elemento se puede añadir un único listener al elemento padre y se hereda o algo así. Sería mejor hacerlo así en mi tres en raya?"
