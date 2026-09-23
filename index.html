@@ -1,37 +1,81 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Mision 1</title>
 
     <link rel="stylesheet" href="style.css">
-    <script src = "script.js" defer></script>
+    <script src="script.js" defer></script>
 </head>
+
 <body>
+
     <h1>Tres en raya</h1>
 
     <noscript>
         <p>Este juego necesita JavaScript para funcionar.</p>
     </noscript>
 
-    <p id = "turno"> Turno: X </p>    
 
-    <div id="tablero">
-        <button class="casilla"></button>
-        <button class="casilla"></button>
-        <button class="casilla"></button>
-        <button class="casilla"></button>
-        <button class="casilla"></button>
-        <button class="casilla"></button>
-        <button class="casilla"></button>
-        <button class="casilla"></button>
-        <button class="casilla"></button>
+    <div id="inicio">
+
+        <h2>Jugadores</h2>
+
+        <input
+            id="inputJugador1"
+            type="text"
+            placeholder="Nombre jugador X"
+        >
+
+        <input
+            id="inputJugador2"
+            type="text"
+            placeholder="Nombre jugador O"
+        >
+
+        <button id="empezar">
+            Empezar partida
+        </button>
+
     </div>
 
-    <button id="reiniciar">Reiniciar partida</button>
+
+    <div id="juego" class="oculto">
+
+        <div id="jugadores">
+            <p id="jugador1">Jugador X</p>
+            <p id="jugador2">Jugador O</p>
+        </div>
+
+        <p id="turno">Turno: X</p>
 
 
-    
+        <div id="tablero">
+
+            <button class="casilla"></button>
+            <button class="casilla"></button>
+            <button class="casilla"></button>
+
+            <button class="casilla"></button>
+            <button class="casilla"></button>
+            <button class="casilla"></button>
+
+            <button class="casilla"></button>
+            <button class="casilla"></button>
+            <button class="casilla"></button>
+
+        </div>
+
+
+        <button id="reiniciar">
+            Reiniciar partida
+        </button>
+
+    </div>
+
 </body>
+
 </html>

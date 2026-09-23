@@ -13,11 +13,114 @@ body {
     color: #1e293b;
 }
 
+
 h1 {
-    margin: 0 0 12px;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 20px;
 
     font-size: 36px;
 }
+
+
+/* PANTALLA DE INICIO */
+
+#inicio {
+    width: 300px;
+
+    padding: 24px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+
+    background-color: white;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+}
+
+
+#inicio h2 {
+    margin: 0 0 8px;
+
+    text-align: center;
+}
+
+
+#inicio input {
+    padding: 12px;
+
+    font-size: 16px;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+}
+
+
+#inicio input:focus {
+    outline: none;
+
+    border-color: #2563eb;
+}
+
+
+#empezar {
+    padding: 12px;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    color: white;
+    background-color: #2563eb;
+
+    border: none;
+    border-radius: 8px;
+
+    cursor: pointer;
+}
+
+
+#empezar:hover {
+    background-color: #1d4ed8;
+}
+
+
+/* JUEGO */
+
+#juego {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+}
+
+
+#juego.oculto,
+#inicio.oculto {
+    display: none;
+}
+
+
+#jugadores {
+    display: flex;
+
+    gap: 30px;
+
+    margin-bottom: 14px;
+}
+
+
+#jugadores p {
+    margin: 0;
+
+    font-size: 18px;
+}
+
 
 #turno {
     margin: 0 0 28px;
@@ -32,14 +135,17 @@ h1 {
     border-radius: 20px;
 }
 
+
 #tablero {
     display: grid;
+
     grid-template-columns: repeat(3, 100px);
 
     gap: 8px;
 
     margin-bottom: 22px;
 }
+
 
 .casilla {
     width: 100px;
@@ -65,8 +171,10 @@ h1 {
         box-shadow 0.2s;
 }
 
+
 .casilla:hover {
     background-color: #f1f5f9;
+
     border-color: #2563eb;
 
     transform: translateY(-2px);
@@ -74,9 +182,11 @@ h1 {
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
 }
 
+
 .casilla:active {
     transform: scale(0.96);
 }
+
 
 #reiniciar {
     width: 316px;
@@ -102,6 +212,7 @@ h1 {
         box-shadow 0.2s;
 }
 
+
 #reiniciar:hover {
     background-color: #1d4ed8;
 
@@ -110,43 +221,104 @@ h1 {
     box-shadow: 0 6px 14px rgba(37, 99, 235, 0.3);
 }
 
+
 #reiniciar:active {
     transform: scale(0.98);
 }
 
+
+/* SIN JAVASCRIPT */
+
 noscript p {
     color: red;
+
     font-weight: bold;
 }
+
+
+/* COLORES DE LOS JUGADORES */
 
 .jugador-x {
     color: #2563eb;
 }
 
+
 .jugador-o {
     color: #dc2626;
 }
 
+
+/* MODO OSCURO */
+
 body.modo-oscuro {
     background: #111827;
+
     color: #f8fafc;
 }
 
-body.modo-oscuro #turno {
-    background-color: #334155;
-    color: #f8fafc;
-}
 
-body.modo-oscuro .casilla {
+body.modo-oscuro #inicio {
     background-color: #1e293b;
+
     border-color: #64748b;
 }
 
+
+body.modo-oscuro #inicio input {
+    color: white;
+    background-color: #334155;
+
+    border-color: #64748b;
+}
+
+
+body.modo-oscuro #inicio input::placeholder {
+    color: #cbd5e1;
+}
+
+
+body.modo-oscuro #turno {
+    background-color: #334155;
+
+    color: #f8fafc;
+}
+
+
+body.modo-oscuro .casilla {
+    background-color: #1e293b;
+
+    border-color: #64748b;
+}
+
+
 body.modo-oscuro .casilla:hover {
     background-color: #334155;
+
     border-color: #60a5fa;
 }
 
-body.modo-oscuro #reiniciar {
+
+body.modo-oscuro #reiniciar,
+body.modo-oscuro #empezar {
     background-color: #3b82f6;
+}
+
+.casilla.ganadora {
+    background-color: #facc15;
+    animation: resaltarGanadora 0.6s ease-in-out infinite;
+}
+
+
+@keyframes resaltarGanadora {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.08);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
