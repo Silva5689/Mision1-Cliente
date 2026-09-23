@@ -12,6 +12,10 @@ Se trata de un tablero 3x3 en el que dos jugadores compiten por conseguir tres s
 - JavaScript
 
 ## Uso de IA
+Utilicé ChatGPT como herramienta de inteligencia artificial para ayudarme.
+Principalmente la utilicé para que me explicara cómo funcionan y cómo podía implementar cosas que todavía no habíamos llegado a ver en clase.
+Escribí manualmente la estructura HTML, los estilos CSS y la lógica del juego. No obstante, ChatGPT me proponía los cambios para implementar las cosas nuevas que todavía no habíamos visto en clase, por lo tanto, intentaba aplicarlos a mi código y comprobar que funcionaban con el navegador.
+
 ### Prompt 1: 
 "Antes utilizaba onclick directamente en el html, pero en los apuntes de la asignatura he visto que se utiliza addEventListener. Cómo puedo usar addEventListener en mi 3 en raya?"
 ### Resultado 1 : 
@@ -34,8 +38,8 @@ Poniendo 9 listeners, uno a cada casilla, también funcionaba, pero esta manera 
 
 ### Decisión 2
 
-A la hora de guardar los nombres de los jugadores, tenía dos opciones, usar el opreador "||" o el operador "??" para dar nombres por defecto si los jugadores no introducían los suyos. 
-Me decanté por el opreador "||", ya que si el jugador no pone nombre, input.value devuelve una cadena vacía ("", que es falsy) y se utiliza el nombre por defecto.
+A la hora de guardar los nombres de los jugadores, tenía dos opciones, usar el operador "||" o el operador "??" para dar nombres por defecto si los jugadores no introducían los suyos. 
+Me decanté por el operador "||", ya que si el jugador no pone nombre, input.value devuelve una cadena vacía ("", que es falsy) y se utiliza el nombre por defecto.
 Utilizando el operador "??", si el jugador no escribe su nombre, no se pondrá el nombre por defecto, ya que "" (vacío) no es null ni undefined.
 
 
