@@ -11,13 +11,21 @@ const juego = document.querySelector("#juego");
 const inputJugador1 = document.querySelector("#inputJugador1");
 const inputJugador2 = document.querySelector("#inputJugador2");
 
+const marcadorX = document.querySelector("#marcadorX");
+const marcadorO = document.querySelector("#marcadorO");
+const marcadorEmpates = document.querySelector("#marcadorEmpates");
+
 const empezar = document.querySelector("#empezar");
 
-let nombreJugador1 = "Jugador X";
-let nombreJugador2 = "Jugador O";
+let nombreJugador1 = "Jugador 1";
+let nombreJugador2 = "Jugador 2";
 
 let jugadorActual = "X";
 let partidaTerminada = false;
+
+let victoriasX = 0;
+let victoriasO = 0;
+let empates = 0;
 
 const combinacionesGanadoras = [
     [0, 1, 2],
@@ -42,13 +50,14 @@ const casillas = document.querySelectorAll(".casilla");
 
 
 empezar.addEventListener("click", () => {
-    nombreJugador1 = inputJugador1.value.trim() || "Jugador X";
-    nombreJugador2 = inputJugador2.value.trim() || "Jugador O";
+    nombreJugador1 = inputJugador1.value.trim() || "Jugador 1";
+    nombreJugador2 = inputJugador2.value.trim() || "Jugador 2";
 
     jugador1.textContent = `${nombreJugador1} (X)`;
     jugador2.textContent = `${nombreJugador2} (O)`;
 
     actualizarTurno();
+    actualizarMarcador();
 
     inicio.classList.add("oculto");
     juego.classList.remove("oculto");
@@ -64,6 +73,12 @@ function cambiarJugador(jugador) {
 
 function actualizarTurno() {
     turno.textContent = `Turno: ${nombreDe(jugadorActual)} (${jugadorActual})`;
+}
+
+function actualizarMarcador() {
+    marcadorX.textContent = `${nombreJugador1} (X): ${victoriasX}`;
+    marcadorO.textContent = `${nombreJugador2} (O): ${victoriasO}`;
+    marcadorEmpates.textContent = `Empates: ${empates}`;
 }
 
 function comprobarGanador() {
@@ -126,12 +141,22 @@ tablero.addEventListener("click", (event) => {
 
         turno.textContent = `Ha ganado ${nombreGanador} (${jugadorActual})`;
 
+        if (jugadorActual === "X") {
+            victoriasX++;
+        } else {
+            victoriasO++;
+        }
+
+        actualizarMarcador();
+
         partidaTerminada = true;
         return;
     }
 
     if (comprobarEmpate()) {
         turno.textContent = "Empate";
+        empates++;
+        actualizarMarcador();
         partidaTerminada = true;
         return;
     }
