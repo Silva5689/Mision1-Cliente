@@ -1,17 +1,17 @@
-const turno = document.getElementById("turno");
-const reiniciar = document.getElementById("reiniciar");
-const tablero = document.getElementById("tablero");
+const turno = document.querySelector("#turno");
+const reiniciar = document.querySelector("#reiniciar");
+const tablero = document.querySelector("#tablero");
 
-const jugador1 = document.getElementById("jugador1");
-const jugador2 = document.getElementById("jugador2");
+const jugador1 = document.querySelector("#jugador1");
+const jugador2 = document.querySelector("#jugador2");
 
-const inicio = document.getElementById("inicio");
-const juego = document.getElementById("juego");
+const inicio = document.querySelector("#inicio");
+const juego = document.querySelector("#juego");
 
-const inputJugador1 = document.getElementById("inputJugador1");
-const inputJugador2 = document.getElementById("inputJugador2");
+const inputJugador1 = document.querySelector("#inputJugador1");
+const inputJugador2 = document.querySelector("#inputJugador2");
 
-const empezar = document.getElementById("empezar");
+const empezar = document.querySelector("#empezar");
 
 let nombreJugador1 = "Jugador X";
 let nombreJugador2 = "Jugador O";
@@ -32,7 +32,7 @@ const combinacionesGanadoras = [
     [2, 4, 6]
 ];
 
-for(let i = 0; i<9; 1++){
+for(let i = 0; i < 9; i++){
     const casilla = document.createElement("button");
     casilla.classList.add("casilla");
     tablero.appendChild(casilla);
@@ -41,11 +41,9 @@ for(let i = 0; i<9; 1++){
 const casillas = document.querySelectorAll(".casilla");
 
 
-
-
 empezar.addEventListener("click", () => {
-    nombreJugador1 = inputJugador1.value || "Jugador X";
-    nombreJugador2 = inputJugador2.value || "Jugador O";
+    nombreJugador1 = inputJugador1.value.trim() || "Jugador X";
+    nombreJugador2 = inputJugador2.value.trim() || "Jugador O";
 
     jugador1.textContent = `${nombreJugador1} (X)`;
     jugador2.textContent = `${nombreJugador2} (O)`;
@@ -103,7 +101,7 @@ tablero.addEventListener("click", (event) => {
         return;
     }
 
-    if (partidaTerminada === true) {
+    if (partidaTerminada) {
         return;
     }
 
@@ -145,9 +143,8 @@ tablero.addEventListener("click", (event) => {
 reiniciar.addEventListener("click", () => {
     for (const casilla of casillas) {
         casilla.textContent = "";
-        casilla.classList.remove("jugador-x");
-        casilla.classList.remove("jugador-o");
-        casilla.classList.remove("ganadora");
+    
+        casilla.classList.remove("jugador-x","jugador-o","ganadora");
     }
 
     jugadorActual = "X";
