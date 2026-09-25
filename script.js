@@ -179,7 +179,11 @@ reiniciar.addEventListener("click", () => {
 });
 
 document.addEventListener("keydown", (event) => {
-    if (event.key === "d") {
+    if (event.target.tagName === "INPUT") {
+        return;
+    }
+
+    if (event.key.toLowerCase() === "d") {
         document.body.classList.toggle("modo-oscuro");
     }
 });
