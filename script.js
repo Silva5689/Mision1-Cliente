@@ -81,6 +81,12 @@ function actualizarMarcador() {
     marcadorEmpates.textContent = `Empates: ${empates}`;
 }
 
+function finalizarPartida(mensaje) {
+    turno.textContent = mensaje;
+    actualizarMarcador();
+    partidaTerminada = true;
+}
+
 function comprobarGanador() {
     for (const combinacion of combinacionesGanadoras) {
         const primera = combinacion[0];
@@ -139,25 +145,22 @@ tablero.addEventListener("click", (event) => {
 
         const nombreGanador = nombreDe(jugadorActual);
 
-        turno.textContent = `Ha ganado ${nombreGanador} (${jugadorActual})`;
-
         if (jugadorActual === "X") {
             victoriasX++;
         } else {
             victoriasO++;
         }
 
-        actualizarMarcador();
+        finalizarPartida(`Ha ganado ${nombreGanador} (${jugadorActual})`);
 
-        partidaTerminada = true;
         return;
     }
 
     if (comprobarEmpate()) {
-        turno.textContent = "Empate";
         empates++;
-        actualizarMarcador();
-        partidaTerminada = true;
+
+        finalizarPartida("Empate");
+
         return;
     }
 
