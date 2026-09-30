@@ -27,9 +27,16 @@ let jugadorActual = "X";
 let partidaTerminada = false;
 let modoIA = false;
 
-let victoriasX = 0;
-let victoriasO = 0;
-let empates = 0;
+// El marcador se recupera aunque se recargue la página.
+let victoriasX =
+    Number(localStorage.getItem("tresEnRayaVictoriasX")) || 0;
+
+let victoriasO =
+    Number(localStorage.getItem("tresEnRayaVictoriasO")) || 0;
+
+let empates =
+    Number(localStorage.getItem("tresEnRayaEmpates")) || 0;
+
 
 // El estado del juego se guarda separado de lo que se muestra en el DOM.
 const estadoTablero = Array(9).fill("");
@@ -47,16 +54,22 @@ const combinacionesGanadoras = [
     [2, 4, 6]
 ];
 
+
 for (let i = 0; i < estadoTablero.length; i++) {
     const casilla = document.createElement("button");
 
     casilla.type = "button";
     casilla.classList.add("casilla");
     casilla.dataset.indice = i;
-    casilla.setAttribute("aria-label", `Casilla ${i + 1}, vacía`);
+
+    casilla.setAttribute(
+        "aria-label",
+        `Casilla ${i + 1}, vacía`
+    );
 
     tablero.appendChild(casilla);
 }
+
 
 const casillas = document.querySelectorAll(".casilla");
 
@@ -75,7 +88,8 @@ modoJuego.addEventListener("change", () => {
 
 
 empezar.addEventListener("click", () => {
-    nombreJugador1 = inputJugador1.value.trim() || "Jugador 1";
+    nombreJugador1 =
+        inputJugador1.value.trim() || "Jugador 1";
 
     modoIA = modoJuego.value === "ia";
 
@@ -87,21 +101,27 @@ empezar.addEventListener("click", () => {
         return;
     }
 
-    jugador1.textContent = `${nombreJugador1} (X)`;
-    jugador2.textContent = `${nombreJugador2} (O)`;
+    jugador1.textContent =
+        `${nombreJugador1} (X)`;
+
+    jugador2.textContent =
+        `${nombreJugador2} (O)`;
 
     actualizarTurno();
     actualizarMarcador();
 
     inicio.classList.add("oculto");
     juego.classList.remove("oculto");
+
+    casillas[0].focus();
 });
 
 
 function validarNombres() {
     if (
         !modoIA &&
-        nombreJugador1.toLowerCase() === nombreJugador2.toLowerCase()
+        nombreJugador1.toLowerCase() ===
+        nombreJugador2.toLowerCase()
     ) {
         errorNombre.textContent =
             "Los jugadores deben tener nombres diferentes.";
@@ -110,12 +130,15 @@ function validarNombres() {
     }
 
     errorNombre.textContent = "";
+
     return true;
 }
 
 
 function nombreDe(jugador) {
-    return jugador === "X" ? nombreJugador1 : nombreJugador2;
+    return jugador === "X"
+        ? nombreJugador1
+        : nombreJugador2;
 }
 
 
@@ -142,9 +165,31 @@ function actualizarMarcador() {
 }
 
 
+// Guarda únicamente los datos del marcador.
+function guardarMarcador() {
+    localStorage.setItem(
+        "tresEnRayaVictoriasX",
+        victoriasX
+    );
+
+    localStorage.setItem(
+        "tresEnRayaVictoriasO",
+        victoriasO
+    );
+
+    localStorage.setItem(
+        "tresEnRayaEmpates",
+        empates
+    );
+}
+
+
 function finalizarPartida(mensaje) {
     turno.textContent = mensaje;
+
     actualizarMarcador();
+    guardarMarcador();
+
     partidaTerminada = true;
 }
 
@@ -155,7 +200,9 @@ function pintarCasilla(indice, jugador) {
     casilla.textContent = jugador;
 
     casilla.classList.add(
-        jugador === "X" ? "jugador-x" : "jugador-o"
+        jugador === "X"
+            ? "jugador-x"
+            : "jugador-o"
     );
 
     casilla.setAttribute(
@@ -182,28 +229,35 @@ function limpiarCasilla(casilla, indice) {
 
 
 function comprobarGanador(estado) {
-    const combinacion = combinacionesGanadoras.find(
-        ([primera, segunda, tercera]) =>
-            estado[primera] !== "" &&
-            estado[primera] === estado[segunda] &&
-            estado[primera] === estado[tercera]
-    );
+    const combinacion =
+        combinacionesGanadoras.find(
+            ([primera, segunda, tercera]) =>
+                estado[primera] !== "" &&
+                estado[primera] === estado[segunda] &&
+                estado[primera] === estado[tercera]
+        );
 
     return combinacion ?? null;
 }
 
 
 function comprobarEmpate(estado) {
-    return estado.every(valor => valor !== "");
+    return estado.every(
+        valor => valor !== ""
+    );
 }
 
 
-// Comprueba si un jugador puede ganar colocando su símbolo en una casilla libre.
+// Comprueba si un jugador podría ganar en su siguiente movimiento.
 function buscarJugadaGanadora(jugador) {
-    for (let i = 0; i < estadoTablero.length; i++) {
-
+    for (
+        let i = 0;
+        i < estadoTablero.length;
+        i++
+    ) {
         if (estadoTablero[i] === "") {
-            const estadoPrueba = estadoTablero.with(i, jugador);
+            const estadoPrueba =
+                estadoTablero.with(i, jugador);
 
             if (comprobarGanador(estadoPrueba)) {
                 return i;
@@ -214,11 +268,16 @@ function buscarJugadaGanadora(jugador) {
     return -1;
 }
 
+
 // Devuelve una casilla libre aleatoria.
 function elegirCasillaAleatoria() {
     const casillasLibres = [];
 
-    for (let i = 0; i < estadoTablero.length; i++) {
+    for (
+        let i = 0;
+        i < estadoTablero.length;
+        i++
+    ) {
         if (estadoTablero[i] === "") {
             casillasLibres.push(i);
         }
@@ -238,13 +297,15 @@ function elegirCasillaAleatoria() {
 
 // La IA intenta ganar, después bloquear y, si no, juega al azar.
 function elegirCasillaIA() {
-    const jugadaGanadora = buscarJugadaGanadora("O");
+    const jugadaGanadora =
+        buscarJugadaGanadora("O");
 
     if (jugadaGanadora !== -1) {
         return jugadaGanadora;
     }
 
-    const jugadaBloqueo = buscarJugadaGanadora("X");
+    const jugadaBloqueo =
+        buscarJugadaGanadora("X");
 
     if (jugadaBloqueo !== -1) {
         return jugadaBloqueo;
@@ -258,24 +319,16 @@ function jugarIA() {
     const indice = elegirCasillaIA();
 
     if (indice !== -1) {
-        casillas[indice].click();
+        jugarEn(indice);
     }
 }
 
 
-// Un solo listener para todo el tablero mediante delegación de eventos.
-tablero.addEventListener("click", (event) => {
-    const casilla = event.target.closest(".casilla");
-
-    if (!casilla || !tablero.contains(casilla)) {
-        return;
-    }
-
+// Toda jugada, humana o de la IA, pasa por esta misma función.
+function jugarEn(indice) {
     if (partidaTerminada) {
         return;
     }
-
-    const indice = Number(casilla.dataset.indice);
 
     if (estadoTablero[indice] !== "") {
         return;
@@ -283,17 +336,25 @@ tablero.addEventListener("click", (event) => {
 
     estadoTablero[indice] = jugadorActual;
 
-    pintarCasilla(indice, jugadorActual);
+    pintarCasilla(
+        indice,
+        jugadorActual
+    );
 
     const combinacionGanadora =
         comprobarGanador(estadoTablero);
 
     if (combinacionGanadora) {
-        for (const posicion of combinacionGanadora) {
-            casillas[posicion].classList.add("ganadora");
+        for (
+            const posicion
+            of combinacionGanadora
+        ) {
+            casillas[posicion]
+                .classList.add("ganadora");
         }
 
-        const nombreGanador = nombreDe(jugadorActual);
+        const nombreGanador =
+            nombreDe(jugadorActual);
 
         if (jugadorActual === "X") {
             victoriasX++;
@@ -316,11 +377,85 @@ tablero.addEventListener("click", (event) => {
         return;
     }
 
-    jugadorActual = cambiarJugador(jugadorActual);
+    jugadorActual =
+        cambiarJugador(jugadorActual);
+
     actualizarTurno();
 
-    if (modoIA && jugadorActual === "O") {
+    if (
+        modoIA &&
+        jugadorActual === "O"
+    ) {
         jugarIA();
+    }
+}
+
+
+// Delegación de eventos: un único listener para todo el tablero.
+tablero.addEventListener("click", (event) => {
+    const casilla =
+        event.target.closest(".casilla");
+
+    if (
+        !casilla ||
+        !tablero.contains(casilla)
+    ) {
+        return;
+    }
+
+    const indice =
+        Number(casilla.dataset.indice);
+
+    jugarEn(indice);
+});
+
+
+// Permite moverse por el tablero usando las flechas del teclado.
+tablero.addEventListener("keydown", (event) => {
+    const casilla =
+        event.target.closest(".casilla");
+
+    if (!casilla) {
+        return;
+    }
+
+    const indice =
+        Number(casilla.dataset.indice);
+
+    let nuevoIndice = indice;
+
+    if (
+        event.key === "ArrowRight" &&
+        indice % 3 < 2
+    ) {
+        nuevoIndice = indice + 1;
+    }
+
+    if (
+        event.key === "ArrowLeft" &&
+        indice % 3 > 0
+    ) {
+        nuevoIndice = indice - 1;
+    }
+
+    if (
+        event.key === "ArrowDown" &&
+        indice < 6
+    ) {
+        nuevoIndice = indice + 3;
+    }
+
+    if (
+        event.key === "ArrowUp" &&
+        indice >= 3
+    ) {
+        nuevoIndice = indice - 3;
+    }
+
+    if (nuevoIndice !== indice) {
+        event.preventDefault();
+
+        casillas[nuevoIndice].focus();
     }
 });
 
@@ -328,36 +463,57 @@ tablero.addEventListener("click", (event) => {
 reiniciar.addEventListener("click", () => {
     estadoTablero.fill("");
 
-    casillas.forEach((casilla, indice) => {
-        limpiarCasilla(casilla, indice);
-    });
+    casillas.forEach(
+        (casilla, indice) => {
+            limpiarCasilla(
+                casilla,
+                indice
+            );
+        }
+    );
 
     jugadorActual = "X";
     partidaTerminada = false;
 
     actualizarTurno();
+
+    casillas[0].focus();
 });
 
 
-document.addEventListener("keydown", (event) => {
-    if (
-        event.target.tagName === "INPUT" ||
-        event.target.tagName === "SELECT"
-    ) {
-        return;
-    }
+document.addEventListener(
+    "keydown",
+    (event) => {
+        if (
+            event.target.tagName === "INPUT" ||
+            event.target.tagName === "SELECT"
+        ) {
+            return;
+        }
 
-    if (event.key.toLowerCase() === "d") {
-        document.body.classList.toggle("modo-oscuro");
+        if (
+            event.key.toLowerCase() === "d"
+        ) {
+            document.body.classList.toggle(
+                "modo-oscuro"
+            );
+        }
     }
-});
+);
 
 
-inicio.addEventListener("keydown", (event) => {
-    if (
-        event.key === "Enter" &&
-        event.target.tagName === "INPUT"
-    ) {
-        empezar.click();
+inicio.addEventListener(
+    "keydown",
+    (event) => {
+        if (
+            event.key === "Enter" &&
+            event.target.tagName === "INPUT"
+        ) {
+            empezar.click();
+        }
     }
-});
+);
+
+
+// Muestra el marcador guardado al cargar la página.
+actualizarMarcador();
