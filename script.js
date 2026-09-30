@@ -15,6 +15,8 @@ const marcadorX = document.querySelector("#marcadorX");
 const marcadorO = document.querySelector("#marcadorO");
 const marcadorEmpates = document.querySelector("#marcadorEmpates");
 
+const modoJuego = document.querySelector("#modoJuego");
+
 const empezar = document.querySelector("#empezar");
 
 let nombreJugador1 = "Jugador 1";
@@ -22,6 +24,8 @@ let nombreJugador2 = "Jugador 2";
 
 let jugadorActual = "X";
 let partidaTerminada = false;
+
+let modoIA = false;
 
 let victoriasX = 0;
 let victoriasO = 0;
@@ -49,9 +53,27 @@ for(let i = 0; i < 9; i++){
 const casillas = document.querySelectorAll(".casilla");
 
 
+modoJuego.addEventListener("change", () => {
+    if (modoJuego.value === "ia") {
+        inputJugador2.disabled = true;
+        inputJugador2.placeholder = "El rival será el ordenador";
+    } else {
+        inputJugador2.disabled = false;
+        inputJugador2.placeholder = "Nombre jugador O";
+    }
+});
+
+
 empezar.addEventListener("click", () => {
     nombreJugador1 = inputJugador1.value.trim() || "Jugador 1";
-    nombreJugador2 = inputJugador2.value.trim() || "Jugador 2";
+
+    modoIA = modoJuego.value === "ia";
+
+    if (modoIA) {
+        nombreJugador2 = "Ordenador";
+    } else {
+        nombreJugador2 = inputJugador2.value.trim() || "Jugador 2";
+    }
 
     jugador1.textContent = `${nombreJugador1} (X)`;
     jugador2.textContent = `${nombreJugador2} (O)`;
@@ -115,6 +137,26 @@ function comprobarEmpate() {
     return true;
 }
 
+function jugarIA() {
+    const casillasLibres = [];
+
+    for (const casilla of casillas) {
+        if (casilla.textContent === "") {
+            casillasLibres.push(casilla);
+        }
+    }
+
+    if (casillasLibres.length === 0) {
+        return;
+    }
+
+    const posicionAleatoria = Math.floor(
+        Math.random() * casillasLibres.length
+    );
+
+    casillasLibres[posicionAleatoria].click();
+}
+
 tablero.addEventListener("click", (event) => {
     const casilla = event.target.closest(".casilla");
 
@@ -166,6 +208,10 @@ tablero.addEventListener("click", (event) => {
 
     jugadorActual = cambiarJugador(jugadorActual);
     actualizarTurno();
+
+    if (modoIA && jugadorActual === "O") {
+        jugarIA();
+    }
 });
 
 reiniciar.addEventListener("click", () => {
