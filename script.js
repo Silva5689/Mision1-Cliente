@@ -16,6 +16,7 @@ const marcadorO = document.querySelector("#marcadorO");
 const marcadorEmpates = document.querySelector("#marcadorEmpates");
 
 const modoJuego = document.querySelector("#modoJuego");
+const errorNombre = document.querySelector("#errorNombre");
 
 const empezar = document.querySelector("#empezar");
 
@@ -24,12 +25,14 @@ let nombreJugador2 = "Jugador 2";
 
 let jugadorActual = "X";
 let partidaTerminada = false;
-
 let modoIA = false;
 
 let victoriasX = 0;
 let victoriasO = 0;
 let empates = 0;
+
+// El estado del juego se guarda separado de lo que se muestra en el DOM.
+const estadoTablero = Array(9).fill("");
 
 const combinacionesGanadoras = [
     [0, 1, 2],
@@ -44,9 +47,14 @@ const combinacionesGanadoras = [
     [2, 4, 6]
 ];
 
-for(let i = 0; i < 9; i++){
+for (let i = 0; i < estadoTablero.length; i++) {
     const casilla = document.createElement("button");
+
+    casilla.type = "button";
     casilla.classList.add("casilla");
+    casilla.dataset.indice = i;
+    casilla.setAttribute("aria-label", `Casilla ${i + 1}, vacía`);
+
     tablero.appendChild(casilla);
 }
 
@@ -54,13 +62,15 @@ const casillas = document.querySelectorAll(".casilla");
 
 
 modoJuego.addEventListener("change", () => {
-    if (modoJuego.value === "ia") {
-        inputJugador2.disabled = true;
-        inputJugador2.placeholder = "El rival será el ordenador";
-    } else {
-        inputJugador2.disabled = false;
-        inputJugador2.placeholder = "Nombre jugador O";
-    }
+    const contraIA = modoJuego.value === "ia";
+
+    inputJugador2.disabled = contraIA;
+
+    inputJugador2.placeholder = contraIA
+        ? "El rival será el ordenador"
+        : "Nombre jugador O";
+
+    errorNombre.textContent = "";
 });
 
 
@@ -69,10 +79,12 @@ empezar.addEventListener("click", () => {
 
     modoIA = modoJuego.value === "ia";
 
-    if (modoIA) {
-        nombreJugador2 = "Ordenador";
-    } else {
-        nombreJugador2 = inputJugador2.value.trim() || "Jugador 2";
+    nombreJugador2 = modoIA
+        ? "Ordenador"
+        : inputJugador2.value.trim() || "Jugador 2";
+
+    if (!validarNombres()) {
+        return;
     }
 
     jugador1.textContent = `${nombreJugador1} (X)`;
@@ -85,23 +97,50 @@ empezar.addEventListener("click", () => {
     juego.classList.remove("oculto");
 });
 
+
+function validarNombres() {
+    if (
+        !modoIA &&
+        nombreJugador1.toLowerCase() === nombreJugador2.toLowerCase()
+    ) {
+        errorNombre.textContent =
+            "Los jugadores deben tener nombres diferentes.";
+
+        return false;
+    }
+
+    errorNombre.textContent = "";
+    return true;
+}
+
+
 function nombreDe(jugador) {
     return jugador === "X" ? nombreJugador1 : nombreJugador2;
 }
+
 
 function cambiarJugador(jugador) {
     return jugador === "X" ? "O" : "X";
 }
 
+
 function actualizarTurno() {
-    turno.textContent = `Turno: ${nombreDe(jugadorActual)} (${jugadorActual})`;
+    turno.textContent =
+        `Turno: ${nombreDe(jugadorActual)} (${jugadorActual})`;
 }
 
+
 function actualizarMarcador() {
-    marcadorX.textContent = `${nombreJugador1} (X): ${victoriasX}`;
-    marcadorO.textContent = `${nombreJugador2} (O): ${victoriasO}`;
-    marcadorEmpates.textContent = `Empates: ${empates}`;
+    marcadorX.textContent =
+        `${nombreJugador1} (X): ${victoriasX}`;
+
+    marcadorO.textContent =
+        `${nombreJugador2} (O): ${victoriasO}`;
+
+    marcadorEmpates.textContent =
+        `Empates: ${empates}`;
 }
+
 
 function finalizarPartida(mensaje) {
     turno.textContent = mensaje;
@@ -109,58 +148,126 @@ function finalizarPartida(mensaje) {
     partidaTerminada = true;
 }
 
-function comprobarGanador() {
-    for (const combinacion of combinacionesGanadoras) {
-        const primera = combinacion[0];
-        const segunda = combinacion[1];
-        const tercera = combinacion[2];
 
-        if (
-            casillas[primera].textContent !== "" &&
-            casillas[primera].textContent === casillas[segunda].textContent &&
-            casillas[primera].textContent === casillas[tercera].textContent
-        ) {
-            return combinacion;
+function pintarCasilla(indice, jugador) {
+    const casilla = casillas[indice];
+
+    casilla.textContent = jugador;
+
+    casilla.classList.add(
+        jugador === "X" ? "jugador-x" : "jugador-o"
+    );
+
+    casilla.setAttribute(
+        "aria-label",
+        `Casilla ${indice + 1}, ${jugador}`
+    );
+}
+
+
+function limpiarCasilla(casilla, indice) {
+    casilla.textContent = "";
+
+    casilla.classList.remove(
+        "jugador-x",
+        "jugador-o",
+        "ganadora"
+    );
+
+    casilla.setAttribute(
+        "aria-label",
+        `Casilla ${indice + 1}, vacía`
+    );
+}
+
+
+function comprobarGanador(estado) {
+    const combinacion = combinacionesGanadoras.find(
+        ([primera, segunda, tercera]) =>
+            estado[primera] !== "" &&
+            estado[primera] === estado[segunda] &&
+            estado[primera] === estado[tercera]
+    );
+
+    return combinacion ?? null;
+}
+
+
+function comprobarEmpate(estado) {
+    return estado.every(valor => valor !== "");
+}
+
+
+// Comprueba si un jugador puede ganar colocando su símbolo en una casilla libre.
+function buscarJugadaGanadora(jugador) {
+    for (let i = 0; i < estadoTablero.length; i++) {
+
+        if (estadoTablero[i] === "") {
+            const estadoPrueba = estadoTablero.with(i, jugador);
+
+            if (comprobarGanador(estadoPrueba)) {
+                return i;
+            }
         }
     }
 
-    return null;
+    return -1;
 }
 
-function comprobarEmpate() {
-    for (const casilla of casillas) {
-        if (casilla.textContent === "") {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-function jugarIA() {
+// Devuelve una casilla libre aleatoria.
+function elegirCasillaAleatoria() {
     const casillasLibres = [];
 
-    for (const casilla of casillas) {
-        if (casilla.textContent === "") {
-            casillasLibres.push(casilla);
+    for (let i = 0; i < estadoTablero.length; i++) {
+        if (estadoTablero[i] === "") {
+            casillasLibres.push(i);
         }
     }
 
     if (casillasLibres.length === 0) {
-        return;
+        return -1;
     }
 
     const posicionAleatoria = Math.floor(
         Math.random() * casillasLibres.length
     );
 
-    casillasLibres[posicionAleatoria].click();
+    return casillasLibres[posicionAleatoria];
 }
 
+
+// La IA intenta ganar, después bloquear y, si no, juega al azar.
+function elegirCasillaIA() {
+    const jugadaGanadora = buscarJugadaGanadora("O");
+
+    if (jugadaGanadora !== -1) {
+        return jugadaGanadora;
+    }
+
+    const jugadaBloqueo = buscarJugadaGanadora("X");
+
+    if (jugadaBloqueo !== -1) {
+        return jugadaBloqueo;
+    }
+
+    return elegirCasillaAleatoria();
+}
+
+
+function jugarIA() {
+    const indice = elegirCasillaIA();
+
+    if (indice !== -1) {
+        casillas[indice].click();
+    }
+}
+
+
+// Un solo listener para todo el tablero mediante delegación de eventos.
 tablero.addEventListener("click", (event) => {
     const casilla = event.target.closest(".casilla");
 
-    if (!casilla) {
+    if (!casilla || !tablero.contains(casilla)) {
         return;
     }
 
@@ -168,17 +275,18 @@ tablero.addEventListener("click", (event) => {
         return;
     }
 
-    if (casilla.textContent !== "") {
+    const indice = Number(casilla.dataset.indice);
+
+    if (estadoTablero[indice] !== "") {
         return;
     }
 
-    casilla.textContent = jugadorActual;
+    estadoTablero[indice] = jugadorActual;
 
-    casilla.classList.add(
-        jugadorActual === "X" ? "jugador-x" : "jugador-o"
-    );
+    pintarCasilla(indice, jugadorActual);
 
-    const combinacionGanadora = comprobarGanador();
+    const combinacionGanadora =
+        comprobarGanador(estadoTablero);
 
     if (combinacionGanadora) {
         for (const posicion of combinacionGanadora) {
@@ -193,12 +301,14 @@ tablero.addEventListener("click", (event) => {
             victoriasO++;
         }
 
-        finalizarPartida(`Ha ganado ${nombreGanador} (${jugadorActual})`);
+        finalizarPartida(
+            `Ha ganado ${nombreGanador} (${jugadorActual})`
+        );
 
         return;
     }
 
-    if (comprobarEmpate()) {
+    if (comprobarEmpate(estadoTablero)) {
         empates++;
 
         finalizarPartida("Empate");
@@ -214,12 +324,13 @@ tablero.addEventListener("click", (event) => {
     }
 });
 
+
 reiniciar.addEventListener("click", () => {
-    for (const casilla of casillas) {
-        casilla.textContent = "";
-    
-        casilla.classList.remove("jugador-x","jugador-o","ganadora");
-    }
+    estadoTablero.fill("");
+
+    casillas.forEach((casilla, indice) => {
+        limpiarCasilla(casilla, indice);
+    });
 
     jugadorActual = "X";
     partidaTerminada = false;
@@ -227,8 +338,12 @@ reiniciar.addEventListener("click", () => {
     actualizarTurno();
 });
 
+
 document.addEventListener("keydown", (event) => {
-    if (event.target.tagName === "INPUT") {
+    if (
+        event.target.tagName === "INPUT" ||
+        event.target.tagName === "SELECT"
+    ) {
         return;
     }
 
@@ -237,8 +352,12 @@ document.addEventListener("keydown", (event) => {
     }
 });
 
+
 inicio.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
+    if (
+        event.key === "Enter" &&
+        event.target.tagName === "INPUT"
+    ) {
         empezar.click();
     }
 });

@@ -20,13 +20,12 @@
     --fondo-oscuro-input: #334155;
 
     --rojo: #dc2626;
+    --rojo-claro: #f87171;
     --amarillo-ganador: #facc15;
 }
 
 
 body {
-    font-family: Arial, sans-serif;
-
     min-height: 100vh;
     margin: 0;
 
@@ -35,17 +34,15 @@ body {
     justify-content: center;
     align-items: center;
 
+    font-family: Arial, sans-serif;
+
     background: linear-gradient(135deg, #eef3f9, var(--fondo-claro));
     color: var(--texto-principal);
 }
 
 
 h1 {
-    margin-top: 0;
-    margin-left: 0;
-    margin-right: 0;
-    margin-bottom: 20px;
-
+    margin: 0 0 20px;
     font-size: 36px;
 }
 
@@ -54,13 +51,11 @@ h1 {
 
 #inicio {
     width: 300px;
-
     padding: 24px;
 
     display: flex;
     flex-direction: column;
-
-    gap: 12px;
+    gap: 10px;
 
     background-color: white;
 
@@ -73,8 +68,13 @@ h1 {
 
 #inicio h2 {
     margin: 0 0 8px;
-
     text-align: center;
+}
+
+
+#inicio label {
+    font-size: 14px;
+    font-weight: bold;
 }
 
 
@@ -89,11 +89,20 @@ h1 {
 }
 
 
-#inicio input:focus,
-#modoJuego:focus {
-    outline: none;
+#inicio input:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
 
-    border-color: var(--azul-principal);
+
+.mensaje-error {
+    min-height: 18px;
+    margin: 0;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    color: var(--rojo);
 }
 
 
@@ -123,7 +132,6 @@ h1 {
 #juego {
     display: flex;
     flex-direction: column;
-
     align-items: center;
 }
 
@@ -136,16 +144,13 @@ h1 {
 
 #jugadores {
     display: flex;
-
     gap: 30px;
-
     margin-bottom: 14px;
 }
 
 
 #jugadores p {
     margin: 0;
-
     font-size: 18px;
 }
 
@@ -155,6 +160,7 @@ h1 {
     padding: 10px 16px;
 
     background-color: var(--fondo-claro);
+
     border: 1px solid var(--borde-claro);
     border-radius: 10px;
 
@@ -164,6 +170,7 @@ h1 {
 
 #marcador h3 {
     margin: 0 0 8px;
+
     font-size: 14px;
     text-transform: uppercase;
 }
@@ -177,6 +184,7 @@ h1 {
 
 #puntuaciones p {
     margin: 0;
+
     font-size: 16px;
     font-weight: bold;
 }
@@ -198,11 +206,9 @@ h1 {
 
 #tablero {
     display: grid;
-
     grid-template-columns: repeat(3, 100px);
 
     gap: 8px;
-
     margin-bottom: 22px;
 }
 
@@ -234,7 +240,6 @@ h1 {
 
 .casilla:hover {
     background-color: var(--fondo-hover);
-
     border-color: var(--azul-principal);
 
     transform: translateY(-2px);
@@ -248,9 +253,16 @@ h1 {
 }
 
 
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 3px solid var(--azul-claro);
+    outline-offset: 2px;
+}
+
+
 #reiniciar {
     width: 316px;
-
     padding: 12px 20px;
 
     font-size: 16px;
@@ -290,8 +302,7 @@ h1 {
 /* SIN JAVASCRIPT */
 
 noscript p {
-    color: red;
-
+    color: var(--rojo);
     font-weight: bold;
 }
 
@@ -308,18 +319,23 @@ noscript p {
 }
 
 
+.casilla.ganadora {
+    background-color: var(--amarillo-ganador);
+    animation: resaltarGanadora 0.6s ease-in-out infinite;
+}
+
+
 /* MODO OSCURO */
 
 body.modo-oscuro {
     background: var(--fondo-oscuro);
-
     color: var(--texto-claro);
 }
 
 
-body.modo-oscuro #inicio {
+body.modo-oscuro #inicio,
+body.modo-oscuro #marcador {
     background-color: var(--fondo-oscuro-secundario);
-
     border-color: var(--borde-oscuro);
 }
 
@@ -338,43 +354,32 @@ body.modo-oscuro #inicio input::placeholder {
 }
 
 
-body.modo-oscuro #turno {
-    background-color: var(--fondo-oscuro-input);
+body.modo-oscuro .mensaje-error {
+    color: var(--rojo-claro);
+}
 
+
+body.modo-oscuro #turno {
     color: var(--texto-claro);
+    background-color: var(--fondo-oscuro-input);
 }
 
 
 body.modo-oscuro .casilla {
     background-color: var(--fondo-oscuro-secundario);
-
     border-color: var(--borde-oscuro);
 }
 
 
 body.modo-oscuro .casilla:hover {
     background-color: var(--fondo-oscuro-input);
-
     border-color: var(--azul-claro);
-}
-
-
-body.modo-oscuro #marcador {
-    background-color: var(--fondo-oscuro-secundario);
-
-    border-color: var(--borde-oscuro);
 }
 
 
 body.modo-oscuro #reiniciar,
 body.modo-oscuro #empezar {
     background-color: var(--azul-modo-oscuro);
-}
-
-
-.casilla.ganadora {
-    background-color: var(--amarillo-ganador);
-    animation: resaltarGanadora 0.6s ease-in-out infinite;
 }
 
 

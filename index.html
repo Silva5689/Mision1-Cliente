@@ -19,34 +19,39 @@
         <p>Este juego necesita JavaScript para funcionar.</p>
     </noscript>
 
-
     <div id="inicio">
 
         <h2>Jugadores</h2>
 
+        <label for="inputJugador1">Jugador X</label>
         <input
             id="inputJugador1"
             type="text"
             placeholder="Nombre jugador X"
+            maxlength="20"
         >
 
+        <label for="inputJugador2">Jugador O</label>
         <input
             id="inputJugador2"
             type="text"
             placeholder="Nombre jugador O"
+            maxlength="20"
         >
 
+        <label for="modoJuego">Modo de juego</label>
         <select id="modoJuego">
             <option value="jugadores">2 jugadores</option>
             <option value="ia">Jugar contra IA</option>
         </select>
 
-        <button id="empezar">
+        <p id="errorNombre" class="mensaje-error" aria-live="polite"></p>
+
+        <button id="empezar" type="button">
             Empezar partida
         </button>
 
     </div>
-
 
     <div id="juego" class="oculto">
 
@@ -65,13 +70,15 @@
             </div>
         </div>
 
-        <p id="turno">Turno: X</p>
+        <p id="turno" aria-live="polite">Turno: X</p>
 
+        <div
+            id="tablero"
+            role="group"
+            aria-label="Tablero de tres en raya"
+        ></div>
 
-        <div id="tablero"></div>
-
-
-        <button id="reiniciar">
+        <button id="reiniciar" type="button">
             Reiniciar partida
         </button>
 
