@@ -53,15 +53,20 @@ const combinacionesGanadoras = [
 
 // CREACIÓN DEL TABLERO
 
-for (let i = 0; i < estadoTablero.length; i++) {
+function crearCasilla(indice) {
     const casilla = document.createElement("button");
 
     casilla.type = "button";
     casilla.classList.add("casilla");
-    casilla.dataset.indice = i;
-    casilla.setAttribute("aria-label", `Casilla ${i + 1}, vacía`);
+    casilla.dataset.indice = indice;
+    casilla.setAttribute("aria-label", `Casilla ${indice + 1}, vacía`);
 
     tablero.appendChild(casilla);
+}
+
+
+for (let i = 0; i < estadoTablero.length; i++) {
+    crearCasilla(i);
 }
 
 const casillas = document.querySelectorAll(".casilla");
