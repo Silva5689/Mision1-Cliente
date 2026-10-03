@@ -167,6 +167,54 @@ function comprobarEmpate(estado) {
 }
 
 
+function realizarJugada(indice) {
+    if (partidaTerminada) {
+        return;
+    }
+
+    if (estadoTablero[indice] !== "") {
+        return;
+    }
+
+    estadoTablero[indice] = jugadorActual;
+    pintarCasilla(indice, jugadorActual);
+
+    const combinacionGanadora = comprobarGanador(estadoTablero);
+
+    if (combinacionGanadora) {
+        for (const posicion of combinacionGanadora) {
+            casillas[posicion].classList.add("ganadora");
+        }
+
+        const nombreGanador = nombreDe(jugadorActual);
+
+        if (jugadorActual === "X") {
+            victoriasX++;
+        } else {
+            victoriasO++;
+        }
+
+        finalizarPartida(`Ha ganado ${nombreGanador} (${jugadorActual})`);
+
+        return;
+    }
+
+    if (comprobarEmpate(estadoTablero)) {
+        empates++;
+        finalizarPartida("Empate");
+
+        return;
+    }
+
+    jugadorActual = cambiarJugador(jugadorActual);
+    actualizarTurno();
+
+    if (modoIA && jugadorActual === "O") {
+        jugarIA();
+    }
+}
+
+
 // FUNCIONES DE LA IA
 
 function buscarJugadaGanadora(jugador) {
@@ -224,7 +272,7 @@ function jugarIA() {
     const indice = elegirCasillaIA();
 
     if (indice !== -1) {
-        casillas[indice].click();
+        realizarJugada(indice);
     }
 }
 
@@ -276,52 +324,9 @@ tablero.addEventListener("click", (event) => {
         return;
     }
 
-    if (partidaTerminada) {
-        return;
-    }
-
     const indice = Number(casilla.dataset.indice);
 
-    if (estadoTablero[indice] !== "") {
-        return;
-    }
-
-    estadoTablero[indice] = jugadorActual;
-    pintarCasilla(indice, jugadorActual);
-
-    const combinacionGanadora = comprobarGanador(estadoTablero);
-
-    if (combinacionGanadora) {
-        for (const posicion of combinacionGanadora) {
-            casillas[posicion].classList.add("ganadora");
-        }
-
-        const nombreGanador = nombreDe(jugadorActual);
-
-        if (jugadorActual === "X") {
-            victoriasX++;
-        } else {
-            victoriasO++;
-        }
-
-        finalizarPartida(`Ha ganado ${nombreGanador} (${jugadorActual})`);
-
-        return;
-    }
-
-    if (comprobarEmpate(estadoTablero)) {
-        empates++;
-        finalizarPartida("Empate");
-
-        return;
-    }
-
-    jugadorActual = cambiarJugador(jugadorActual);
-    actualizarTurno();
-
-    if (modoIA && jugadorActual === "O") {
-        jugarIA();
-    }
+    realizarJugada(indice);
 });
 
 
